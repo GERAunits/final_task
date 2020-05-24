@@ -1,5 +1,6 @@
 from .base_page import BasePage
 from .locators import ProductPageLocators
+from selenium.common.exceptions import NoAlertPresentException
 
 
 class ProductPage(BasePage):
@@ -19,11 +20,3 @@ class ProductPage(BasePage):
         cart_total_price = self.browser.find_element(*ProductPageLocators.MESSAGE_CART_PRICE).text
         assert product_price == cart_total_price, "Wrong cart price when added item: {} != {}" \
             .format(product_price, cart_total_price)
-
-    def check_adding_message_not_present(self):
-        assert self.is_not_element_present(*ProductPageLocators.MESSAGE_PRODUCT_NAME), \
-            "Product adding message must be absent"
-
-    def check_adding_message_is_disappeared(self):
-        assert self.is_disappeared(*ProductPageLocators.MESSAGE_PRODUCT_NAME), \
-            "Product adding message must be disappeared"
