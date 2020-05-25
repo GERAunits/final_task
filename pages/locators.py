@@ -8,7 +8,7 @@ class BasePageLocators():
     LOGIN_FORM = (By.CSS_SELECTOR, '#login_form')
     REGISTER_FORM = (By.CSS_SELECTOR, '#register_form')
     BASKET_LINK = (By.CSS_SELECTOR, "span.btn-group")
-    # a.btn - default
+    USER_ICON = (By.CLASS_NAME, "icon-user")
 
 
 class MainPageLocators():
@@ -24,6 +24,10 @@ class LoginPageLocators(object):
     LOGIN_URL_KEY = 'login'
     LOGIN_FORM = (By.CSS_SELECTOR, '#login_form')
     REGISTER_FORM = (By.CSS_SELECTOR, '#register_form')
+    USER_REGISTRATION_EMAIL = (By.ID, "id_registration-email")
+    USER_REGISTRATION_PASSWORD_1 = (By.ID, "id_registration-password1")
+    USER_REGISTRATION_PASSWORD_2 = (By.ID, "id_registration-password2")
+    USER_REGISTRATION_BUTTON = (By.NAME, "registration_submit")
 
 
 class ProductPageLocators(object):

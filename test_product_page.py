@@ -2,7 +2,54 @@ import pytest
 from .pages.product_page import ProductPage
 from .pages.base_page import BasePage
 from .pages.basket_page import BasketPage
+from .pages.login_page import LoginPage
+from .pages.locators import BasePageLocators
 import time
+
+
+class TestUserAddToBasketFromProductPage():
+    @pytest.fixture(scope="function", autouse=True)
+    def setup(self, browser):
+        page = LoginPage(browser, *BasePageLocators.LOGIN_LINK)
+        page.open()
+        email = str(time.time()) + "@fakemail.org"
+        page.register_new_user(email, "ssswwee")
+        page.should_be_authorized_user()
+
+    def test_user_can_add_product_to_basket(self, browser):
+        page = ProductPage(browser, link)
+        page.open()
+        page.add_product_to_cart()
+        page.check_for_message_product_is_add()
+        page.check_for_correct_cart_price()
+
+    @pytest.mark.two
+    def test_user_cant_see_success_message(browser):
+        product_page = ProductPage(browser, 'http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/')
+        product_page.open()
+        product_page.check_adding_message_not_present()
+
+
+@pytest.mark.login
+class TestLoginFromProductPage():
+    @pytest.fixture(scope="function", autouse=True)
+    def setup(self):
+        self.product = ProductFactory(title="Best book created by robot")
+        # создаем по апи
+        self.link = self.product.link
+        yield
+        # после этого ключевого слова начинается teardown
+        # выполнится после каждого теста в классе
+        # удаляем те данные, которые мы создали
+        self.product.delete()
+
+    def test_guest_can_go_to_login_page_from_product_page(self, browser):
+        page = ProductPage(browser, self.link)
+        # дальше обычная реализация теста
+
+    def test_guest_should_see_login_link(self, browser):
+        page = ProductPage(browser, self.link)
+        # дальше обычная реализация теста
 
 
 @pytest.mark.basket
@@ -34,37 +81,12 @@ def test_guest_can_go_to_login_page_from_product_page(browser):
     login_page.should_be_login_page()
 
 
-@pytest.mark.parametrize('link', ["http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer0",
-                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer1",
-                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer2",
-                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer3",
-                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer4",
-                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer5",
-                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer6",
-                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer7",
-                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer8",
-                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer9"])
-def test_guest_can_add_product_to_basket(browser, link):
-    page = ProductPage(browser, link)
-    page.open()
-    page.add_product_to_cart()
-    page.check_for_message_product_is_add()
-    page.check_for_correct_cart_price()
-
-
 @pytest.mark.one
 def test_guest_cant_see_success_message_after_adding_product_to_basket(browser):
     product_page = ProductPage(browser, 'http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/')
     product_page.open()
     product_page.add_product_to_cart()
     product_page.should_not_be_success_message()
-
-
-@pytest.mark.two
-def test_guest_cant_see_success_message(browser):
-    product_page = ProductPage(browser, 'http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/')
-    product_page.open()
-    product_page.check_adding_message_not_present()
 
 
 @pytest.mark.three
