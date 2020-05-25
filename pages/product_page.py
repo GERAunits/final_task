@@ -4,10 +4,12 @@ from .base_page import BasePage
 
 
 class ProductPage(BasePage):
+    def add_product_to_cart_promo(self):
+        self.browser.find_element(*ProductPageLocators.ADD_TO_CART_BUTTON).click()
+        self.solve_quiz_and_get_code()
+
     def add_product_to_cart(self):
-        button = self.browser.find_element(*ProductPageLocators.ADD_TO_CART_BUTTON)
-        button.click()
-        # self.solve_quiz_and_get_code()
+        self.browser.find_element(*ProductPageLocators.ADD_TO_CART_BUTTON).click()
 
     def check_for_message_product_is_add(self):
         product_name = self.browser.find_element(*ProductPageLocators.PRODUCT_NAME).text
@@ -22,13 +24,10 @@ class ProductPage(BasePage):
             .format(product_price, cart_total_price)
 
     def should_not_be_success_message(self):
-        assert self.is_not_element_present(*ProductPageLocators.ALERT_SUCCESS), \
-            "Success message is presented, but should not be"
+        assert self.is_not_element_present(*ProductPageLocators.ALERT_SUCCESS), "Success message is presented, but should not be"
 
     def check_adding_message_not_present(self):
-        assert self.is_not_element_present(*ProductPageLocators.ALERT_SUCCESS), \
-            "Product adding message must be absent"
+        assert self.is_not_element_present(*ProductPageLocators.ALERT_SUCCESS), "Product adding message must be absent"
 
     def check_adding_message_is_disappeared(self):
-        assert self.is_disappeared(*ProductPageLocators.ALERT_SUCCESS), \
-            "Product adding message must be disappeared"
+        assert self.is_disappeared(*ProductPageLocators.ALERT_SUCCESS), "Product adding message must be disappeared"

@@ -3,20 +3,22 @@ from .pages.product_page import ProductPage
 from .pages.base_page import BasePage
 from .pages.basket_page import BasketPage
 from .pages.login_page import LoginPage
-from .pages.locators import BasePageLocators
 import time
 
 
+@pytest.mark.addtobasket
 class TestUserAddToBasketFromProductPage():
     @pytest.fixture(scope="function", autouse=True)
     def setup(self, browser):
-        page = LoginPage(browser, *BasePageLocators.LOGIN_LINK)
+        page = LoginPage(browser, 'http://selenium1py.pythonanywhere.com/accounts/login/')
         page.open()
         email = str(time.time()) + "@fakemail.org"
-        page.register_new_user(email, "ssswwee")
+        page.register_new_user(email, "sssEwwee1")
         page.should_be_authorized_user()
 
+    @pytest.mark.need_review
     def test_user_can_add_product_to_basket(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207"
         page = ProductPage(browser, link)
         page.open()
         page.add_product_to_cart()
@@ -24,32 +26,29 @@ class TestUserAddToBasketFromProductPage():
         page.check_for_correct_cart_price()
 
     @pytest.mark.two
-    def test_user_cant_see_success_message(browser):
-        product_page = ProductPage(browser, 'http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/')
+    def test_user_cant_see_success_message(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207"
+        product_page = ProductPage(browser, link)
         product_page.open()
         product_page.check_adding_message_not_present()
 
 
-@pytest.mark.login
-class TestLoginFromProductPage():
-    @pytest.fixture(scope="function", autouse=True)
-    def setup(self):
-        self.product = ProductFactory(title="Best book created by robot")
-        # создаем по апи
-        self.link = self.product.link
-        yield
-        # после этого ключевого слова начинается teardown
-        # выполнится после каждого теста в классе
-        # удаляем те данные, которые мы создали
-        self.product.delete()
-
-    def test_guest_can_go_to_login_page_from_product_page(self, browser):
-        page = ProductPage(browser, self.link)
-        # дальше обычная реализация теста
-
-    def test_guest_should_see_login_link(self, browser):
-        page = ProductPage(browser, self.link)
-        # дальше обычная реализация теста
+@pytest.mark.need_review
+@pytest.mark.parametrize('link', ["http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer0",
+                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer1",
+                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer2",
+                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer3",
+                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer4",
+                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer5",
+                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer6",
+                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer8",
+                                  "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer9"])
+def test_guest_can_add_product_to_basket(browser, link):
+    page = ProductPage(browser, link)
+    page.open()
+    page.add_product_to_cart_promo()
+    page.check_for_message_product_is_add()
+    page.check_for_correct_cart_price()
 
 
 @pytest.mark.basket
@@ -63,7 +62,7 @@ def test_guest_cant_see_product_in_basket_opened_from_product_page(browser):
     basket_page.should_be_empty_basket_text_message()
 
 
-@pytest.mark.guest1
+@pytest.mark.need_review
 def test_guest_should_see_login_link_on_product_page(browser):
     link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"
     page = ProductPage(browser, link)
@@ -71,7 +70,7 @@ def test_guest_should_see_login_link_on_product_page(browser):
     page.should_be_login_link()
 
 
-@pytest.mark.guest2
+@pytest.mark.need_review
 def test_guest_can_go_to_login_page_from_product_page(browser):
     link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"
     page = ProductPage(browser, link)
