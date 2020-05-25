@@ -51,6 +51,7 @@ def test_guest_can_add_product_to_basket(browser, link):
     page.check_for_correct_cart_price()
 
 
+@pytest.mark.need_review
 @pytest.mark.basket
 def test_guest_cant_see_product_in_basket_opened_from_product_page(browser):
     link = 'http://selenium1py.pythonanywhere.com/catalogue/the-city-and-the-stars_95/'
