@@ -1,4 +1,4 @@
-# final_task
+# Применение паттерна Page Object Model
 Финальное задание курса "Автоматизация тестирования с помощью Selenium и Python" от команды Stepik
 
-<h2>Применение паттерна Page Object Model</h2>
+
