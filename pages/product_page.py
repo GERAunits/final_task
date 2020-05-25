@@ -1,13 +1,13 @@
 from .base_page import BasePage
 from .locators import ProductPageLocators
-from selenium.common.exceptions import NoAlertPresentException
+from .base_page import BasePage
 
 
 class ProductPage(BasePage):
     def add_product_to_cart(self):
         button = self.browser.find_element(*ProductPageLocators.ADD_TO_CART_BUTTON)
         button.click()
-        self.solve_quiz_and_get_code()
+        # self.solve_quiz_and_get_code()
 
     def check_for_message_product_is_add(self):
         product_name = self.browser.find_element(*ProductPageLocators.PRODUCT_NAME).text
@@ -20,3 +20,15 @@ class ProductPage(BasePage):
         cart_total_price = self.browser.find_element(*ProductPageLocators.MESSAGE_CART_PRICE).text
         assert product_price == cart_total_price, "Wrong cart price when added item: {} != {}" \
             .format(product_price, cart_total_price)
+
+    def should_not_be_success_message(self):
+        assert self.is_not_element_present(*ProductPageLocators.ALERT_SUCCESS), \
+            "Success message is presented, but should not be"
+
+    def check_adding_message_not_present(self):
+        assert self.is_not_element_present(*ProductPageLocators.ALERT_SUCCESS), \
+            "Product adding message must be absent"
+
+    def check_adding_message_is_disappeared(self):
+        assert self.is_disappeared(*ProductPageLocators.ALERT_SUCCESS), \
+            "Product adding message must be disappeared"
